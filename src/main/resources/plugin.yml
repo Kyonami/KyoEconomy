@@ -1,0 +1,4 @@
+name: KyoEconomy
+version: '${project.version}'
+main: org.kyonami.kyoeconomy.KyoEconomy
+api-version: '1.20'
