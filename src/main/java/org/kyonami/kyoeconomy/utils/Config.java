@@ -1,5 +1,6 @@
 package org.kyonami.kyoeconomy.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -10,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Level;
 
 public class Config {
     private String path;
@@ -44,8 +46,8 @@ public class Config {
         if(this.file.exists()) {
             return;
         }
-
         this.file.getParentFile().mkdirs();
+        copyFile(resourceFile);
     }
 
     private void copyFile(InputStream in){

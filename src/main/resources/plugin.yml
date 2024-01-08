@@ -7,4 +7,4 @@ description:  KyoEconomy Plugin
 commands:
   money:
     description: "KyoEconomy"
-    aliases: [eco]
+    aliases: [economy, eco]

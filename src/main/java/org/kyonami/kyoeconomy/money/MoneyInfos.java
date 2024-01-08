@@ -33,36 +33,40 @@ public class MoneyInfos {
             info.save();
         }
     }
-    public void addPlayer(Player player){
-        if(this.infoMap.containsKey(player.getUniqueId()))
+    public void addPlayer(UUID playerID){
+        if(this.infoMap.containsKey(playerID))
             return;
 
-        this.infoMap.put(player.getUniqueId(), new MoneyInfo(player));
+        this.infoMap.put(playerID, new MoneyInfo(playerID));
     }
 
-    public void removePlayer(Player player){
-        MoneyInfo moneyInfo = this.infoMap.remove(player.getUniqueId());
+    public void removePlayer(UUID playerID){
+        MoneyInfo moneyInfo = this.infoMap.remove(playerID);
         if (moneyInfo != null)
             moneyInfo.save();
     }
 
-    public void addMoney(Player player, double money){
-        MoneyInfo moneyInfo = getMoneyInfo(player);
-        moneyInfo.setMoney(moneyInfo.getMoney() + money);
+    // 플레이어가 온라인이 아니어도 보낼 수 있음
+    public void addMoney(UUID playerUUID, long money){
+        Player receiver = Bukkit.getPlayer(playerUUID);
+        if(receiver != null)
+        {
+            MoneyInfo moneyInfo = getMoneyInfo(playerUUID);
+            moneyInfo.setMoney(moneyInfo.getMoney() + money);
+        }
+        else
+            addOfflinePlayerMoney(playerUUID, money);
     }
 
-    public void addOfflinePlayerMoney(UUID playerUUID, double money){
+    public void addOfflinePlayerMoney(UUID playerUUID, long money){
         MoneyInfo moneyInfo = new MoneyInfo(playerUUID);
         moneyInfo.setMoney(moneyInfo.getMoney() + money);
         moneyInfo.save();
     }
 
-    // 만약 player 에 맞는 moneyInfo 없으면 새로 추가.
-    public MoneyInfo getMoneyInfo(Player player) {
-        MoneyInfo info = this.infoMap.get(player.getUniqueId());
-        if(info == null)
-            addPlayer(player);
-
-        return this.infoMap.get(player.getUniqueId());
+    public MoneyInfo getMoneyInfo(UUID playerID){
+        if(this.infoMap.get(playerID) == null)
+            addPlayer(playerID);
+        return this.infoMap.get(playerID);
     }
 }

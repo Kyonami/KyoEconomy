@@ -15,12 +15,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class OnPlayerEvent implements Listener {
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
-        MoneyInfos.getInstance().addPlayer(event.getPlayer());
+        MoneyInfos.getInstance().addPlayer(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
-        MoneyInfos.getInstance().removePlayer(event.getPlayer());
+        MoneyInfos.getInstance().removePlayer(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
@@ -41,12 +41,12 @@ public class OnPlayerEvent implements Listener {
                     if(itemMeta == null || !itemMeta.hasDisplayName())
                         break;
 
-                    if (itemMeta.getDisplayName().equals("Check")) {
+                    if (itemMeta.getDisplayName().equals("수표")) {
                         exchangeCheck(player, mainHandItem, itemMeta);
                         break;
                     }
                 }
-
+                break;
         }
     }
 
@@ -55,15 +55,15 @@ public class OnPlayerEvent implements Listener {
         if(!itemMeta.hasLore())
             return;
 
-        String lore = itemMeta.getLore().getFirst();
+        String lore = itemMeta.getLore().get(0);
         if(!lore.contains("$"))
             return;
 
         lore = lore.replace("$", "");
 
-        double money = Double.parseDouble(lore);
+        long money = Long.parseLong(lore);
         mainHandItem.setAmount(mainHandItem.getAmount() - 1);
-        MoneyInfos.getInstance().addMoney(player, money);
-        player.sendMessage("You've received " + money + "$ check.\nNow you have " + MoneyInfos.getInstance().getMoneyInfo(player).getMoneyString() + "$ left.");
+        MoneyInfos.getInstance().addMoney(player.getUniqueId(), money);
+        player.sendMessage(+ money + "$수표를 사용하였습니다.\n 잔액이 " + MoneyInfos.getInstance().getMoneyInfo(player.getUniqueId()).getMoneyString() + "$ 남았습니다.");
     }
 }

@@ -6,25 +6,25 @@ import java.util.UUID;
 
 public class MoneyInfo {
     private Player player;
-    private double money;
+    private long money;
     private final Config config;
     public Player getPlayer() { return this.player; }
-    public double getMoney() { return this.money; }
-    public String getMoneyString() { return String.format("%.2f", this.money);}
-    public Boolean compareMoney(double money) { return money < this.money; }
+    public long getMoney() { return this.money; }
+    public String getMoneyString() { return Long.toString(this.money);}
+    public Boolean hasEnoughMoney(double money) { return money <= this.money; }
 
     public MoneyInfo(Player player){
         this.player = player;
-        this.config = new Config("plugins/kyoeconomy/Users/" + this.player.getUniqueId() + ".yml");
-        this.money = config.getDouble("money");
+        this.config = new Config("plugins/KyoEconomy/Users/" + this.player.getUniqueId() + ".yml");
+        this.money = config.getLong("money");
     }
 
     public MoneyInfo(UUID uuid){
-        this.config = new Config("plugins/kyoeconomy/Users/" + uuid + ".yml");
-        this.money = config.getDouble("money");
+        this.config = new Config("plugins/KyoEconomy/Users/" + uuid + ".yml");
+        this.money = config.getLong("money");
     }
 
-    public void setMoney(double money){
+    public void setMoney(long money){
         this.money = money;
     }
 
@@ -35,6 +35,6 @@ public class MoneyInfo {
 
     public void reload(){
         this.config.reload();
-        this.money = config.getDouble("money");
+        this.money = config.getLong("money");
     }
 }
